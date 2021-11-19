@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  finance:
+    depends_on:
+      - postgres
+      - rabbit
+    build:
+      context: .
+      dockerfile: docker/finance/Dockerfile
+    ports:
+      - "127.0.0.1:8000:8000"
+    command: >
+        sh -c "wait-for-it postgres:5432 && python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000"
+
+  scraper:
+    depends_on:
+      - postgres
+      - rabbit
+    build:
+      context: .
+      dockerfile: docker/scraper/Dockerfile
+    environment:
+        CELERY_BROKER_URL: 'amqp://guest:guest@rabbit:5672'
+    command: >
+        sh -c "wait-for-it finance:8000 && 
+        python -m celery -A scraper worker -B -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+
+  rabbit:
+    image: rabbitmq
+    ports:
+        - "5672:5672"
+  postgres:
+    ports:
+        - "5432:5432"
+    image: postgres
+    environment:
+        POSTGRES_PASSWORD: mys3cr3tp455 
