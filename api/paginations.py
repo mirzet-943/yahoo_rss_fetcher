@@ -5,3 +5,4 @@ class CustomPagination(pagination.LimitOffsetPagination):
     limit_query_param = 'l'
     offset_query_param = 'o'
     max_limit = 50
+    

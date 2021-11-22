@@ -5,4 +5,4 @@ from .models import NewsItem
 class NewsItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = NewsItem
-        fields = ('title', 'description', 'pubDate', '')
+        fields = ('id','link','title', 'description', 'pubDate')

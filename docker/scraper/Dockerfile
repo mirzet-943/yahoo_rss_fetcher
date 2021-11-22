@@ -5,7 +5,6 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
 
 COPY scraper/ /app/scraper/
 COPY requirements.txt /app/requirements.txt
-COPY docker/scraper/entrypoint.sh  /app/docker/scraper/
 COPY . .
 COPY finance/settings.py /app/scraper/settings.py
 

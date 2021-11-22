@@ -13,8 +13,9 @@ services:
     command: >
         sh -c "wait-for-it postgres:5432 && python manage.py makemigrations &&
         python manage.py migrate &&
-        python manage.py runserver 0.0.0.0:8000"
-
+        python manage.py runserver 0.0.0.0:8000 &&
+        wait-for-it finance:8000 &&
+        python manage.py test"
   scraper:
     depends_on:
       - postgres
